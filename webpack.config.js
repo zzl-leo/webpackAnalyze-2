@@ -1,13 +1,46 @@
 let path = require('path')
 let htmlWebpackPlugin = require('html-webpack-plugin');
+const {
+    CleanWebpackPlugin
+} = require('clean-webpack-plugin');
+const CopyPlugin = require('copy-webpack-plugin');
+const webpack = require('webpack')
 
 module.exports = {
     // mode: 'development',
-    mode: 'production', 
+    mode: 'production',
     // 多入口
     entry: {
         home: './src/index.js',
         // other: './src/other.js'
+    },
+    devServer: {
+        // proxy: {
+        // '/api': 'http://localhost:3001' // 配置了一个代理 -- 以api开头的请求都在 该指定路径下
+        // }
+
+        // proxy: { // // 请求以api开头, 转发的时候再删掉api
+        //     '/api': {
+        //         target: 'http://localhost:3001',
+        //         pathRewrite: {'^/api': ''}
+        //     }
+        // }
+
+        // mock 数据
+        before(app) { // 内部提供的方法 钩子
+            app.get('/user', (req, res) => {
+                res.json({
+                    name: 'zzl-before'
+                })
+            })
+        }
+    },
+    resolve: {
+        modules: [path.resolve('node_modules')],
+        alias: { // 路径别名
+            bootstrap: 'bootstrap/dist/css/bootstrap.css'
+
+        }
     },
 
     // 1 源码映射 会单独生成一个sourcemap文件  代码出错 会标识当前报错的列和行
@@ -48,18 +81,32 @@ module.exports = {
         //     filename: 'other.html', // 指定页面生成的名称
         //     chunks: ['other']
         // })
+        new CleanWebpackPlugin(),
+        new CopyPlugin({
+            patterns: [{
+                from: './doc',
+                to: 'doc/file'
+            }],
+        }),
+        new webpack.BannerPlugin('make 2020 by zzl')
     ],
     module: {
-        rules: [{
-            test: /.\js$/,
-            use: {
-                loader: 'babel-loader',
-                options: {
-                    presets: [
-                        '@babel/preset-env'
-                    ]
+        rules: [
+            {
+                test: /\.js$/,
+                use: {
+                    loader: 'babel-loader',
+                    options: {
+                        presets: [
+                            '@babel/preset-env'
+                        ]
+                    }
                 }
+            },
+            {
+                test: /\.css$/,
+                use: ['style-loader', 'css-loader']
             }
-        }]
+        ]
     }
 }
