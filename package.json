@@ -6,7 +6,8 @@
   "scripts": {
     "start": "webpack-dev-server --inline --content-base .",
     "dev": "webpack-dev-server --open --port 8080",
-    "build": "webpack"
+    "build": "webpack",
+    "bdev": "webpack --config webpack.dev.js"
   },
   "dependencies": {
     "bootstrap": "^4.5.0",
@@ -23,6 +24,7 @@
     "html-webpack-plugin": "^4.3.0",
     "style-loader": "^1.2.1",
     "webpack-dev-middleware": "^3.7.2",
-    "webpack-dev-server": "^3.11.0"
+    "webpack-dev-server": "^3.11.0",
+    "webpack-merge": "^5.1.1"
   }
 }

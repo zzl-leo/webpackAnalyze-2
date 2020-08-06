@@ -8,11 +8,15 @@ const webpack = require('webpack')
 
 module.exports = {
     // mode: 'development',
-    mode: 'production',
+    // mode: 'production',
     // 多入口
     entry: {
         home: './src/index.js',
         // other: './src/other.js'
+    },
+    output: {
+        filename: '[name].[chunkhash].js', // [name] 可以代表home 或者 other   entry的名字
+        path: path.resolve(__dirname, 'dist')
     },
     devServer: {
         // proxy: {
@@ -36,11 +40,13 @@ module.exports = {
         }
     },
     resolve: {
-        modules: [path.resolve('node_modules')],
-        alias: { // 路径别名
-            bootstrap: 'bootstrap/dist/css/bootstrap.css'
+        modules: [path.resolve('node_modules')], // 解析第三方包 common
+        // alias: { // 路径别名
+        //     bootstrap: 'bootstrap/dist/css/bootstrap.css' // 配置后： require('bootstrap')  === require(''bootstrap/dist/css/bootstrap.css'') 两者等效
+        // },
+        // mainFields: ['style', 'main'],// 改变入口字段
+        // mainFiles: ['index'], // 指定入口文件的名字  index.js
 
-        }
     },
 
     // 1 源码映射 会单独生成一个sourcemap文件  代码出错 会标识当前报错的列和行
@@ -62,11 +68,6 @@ module.exports = {
     //   ignored: /node_modules/  // 对于某些系统，监听大量文件系统会导致大量的 CPU 或内存占用。这个选项可以排除一些巨大的文件夹， 不需要进行监控的文件
     // },
 
-
-    output: {
-        filename: '[name].[chunkhash].js', // [name] 可以代表home 或者 other   entry的名字
-        path: path.resolve(__dirname, 'dist')
-    },
     plugins: [ // 配置webpack插件
         new htmlWebpackPlugin({
             // template: './index.html', // 指定模板页面，会更加页面路径生成内存（打包）中的页面
@@ -88,7 +89,12 @@ module.exports = {
                 to: 'doc/file'
             }],
         }),
-        new webpack.BannerPlugin('make 2020 by zzl')
+        new webpack.BannerPlugin('make 2020 by zzl'),
+        new webpack.DefinePlugin({
+            DEV: JSON.stringify('development'),
+            FLAG: 'true',
+            EXPOR: '1+1'
+        })
     ],
     module: {
         rules: [

@@ -8,6 +8,7 @@
 
 // let log = new Log()
 
+require('./a.css')
 
 // 发送一个请求
 let xhr = new XMLHttpRequest();
@@ -27,4 +28,7 @@ xhr.send();
 
 
 // import 'bootstrap/dist/css/bootstrap.css'
-import 'bootstrap'
+// import 'bootstrap'
+console.log(DEV)
+console.log(FLAG)
+console.log(EXPOR)
